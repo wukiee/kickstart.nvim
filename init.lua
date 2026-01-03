@@ -121,6 +121,9 @@ end)
 -- Enable break indent
 vim.o.breakindent = true
 
+-- Disable wrap
+vim.o.wrap = false
+
 -- Save undo history
 vim.o.undofile = true
 
@@ -700,10 +703,21 @@ require('lazy').setup({
           },
         },
         intelephense = {
-          filetypes = { 'php', 'blade' },
+          filetypes = { 'php' },
         },
         html = {
-          filetypes = { 'blade', 'html', 'javascript' },
+          filetypes = { 'blade', 'html' },
+          init_options = {
+            configurationSection = { 'html', 'css', 'javascript' },
+            embeddedLanguages = {
+              css = true,
+              javascript = true,
+            },
+            provideFormatter = true,
+          },
+        },
+        htmx = {
+          filetypes = { 'blade', 'html' },
         },
         ts_ls = {},
       }
@@ -737,6 +751,16 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'oliverhkraft/nvim-pint',
+    config = function()
+      require('nvim-pint').setup {
+        silent = true, -- No notifications
+        exclude_folders = { 'resources/views' }, -- Accepts comma separated array to exlude folders
+      }
+    end,
+  },
+
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
@@ -757,7 +781,7 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
+        local disable_filetypes = { c = true, cpp = true, blade = true }
         if disable_filetypes[vim.bo[bufnr].filetype] then
           return nil
         else
@@ -769,6 +793,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        php = { 'pint', 'php_cs_fixer', stop_after_frist = true },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
