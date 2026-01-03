@@ -698,6 +698,15 @@ require('lazy').setup({
             },
           },
         },
+        intelephense = {
+          settings = {
+            intelephense = {
+              files = {
+                maxSize = 1000000,
+              },
+            },
+          },
+        },
       }
 
       -- Ensure the servers and tools above are installed
